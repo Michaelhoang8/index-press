@@ -97,8 +97,8 @@ class Library:
             raise ValueError('Library limit: 500 documents and 2,000,000 characters including archived documents.')
 
     def add_many(self, documents):
-        if not isinstance(documents, list) or not 1 <= len(documents) <= 100:
-            raise ValueError('Import 1–100 documents at a time.')
+        if not isinstance(documents, list) or not 1 <= len(documents) <= 500:
+            raise ValueError('Import 1–500 documents at a time.')
         normalized = [document(item) for item in documents]
         with self.connection(write=True) as conn:
             self.capacity(conn, len(normalized), sum(len(d['title'])+len(d['text']) for d in normalized))
