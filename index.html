@@ -9,36 +9,13 @@
   </head>
   <body>
     <header>
-      <div class="edition">INFORMATION RETRIEVAL<br />EDITION No. 11</div>
-      <a href="/">The Index Press</a>
-      <div class="edition right">A PERSONAL LIBRARY<br />SEARCHED, NOT SENT</div>
+      <h1>Index Press</h1>
+      <div><button id="new">New document</button><button id="library-open">Collection</button></div>
     </header>
-    <div class="byline">A small, persistent index for things worth finding again.</div>
     <main>
-      <aside>
-        <div class="section-title">
-          <h2>The collection</h2>
-          <button id="new">+ New</button>
-        </div>
-        <p id="library-stats" class="muted"></p>
-        <label class="archive-filter"
-          ><input id="show-archive" type="checkbox" /> Show archived</label
-        >
-        <nav id="library" aria-label="Document library"></nav>
-        <button id="seed">Add sample collection</button>
-        <div class="library-tools">
-          <button id="export">Export active library</button
-          ><label class="file"
-            >Import library JSON<input id="import" type="file" accept=".json,application/json"
-          /></label>
-        </div>
-        <p class="footnote">
-          Stored in a local SQLite database. No account, embeddings, or network service.
-        </p>
-      </aside>
       <section class="search-area">
         <form id="search-form">
-          <label class="query-label" for="query">What are you looking for?</label>
+          <label class="query-label" for="query">Search documents</label>
           <div class="search-row">
             <input
               id="query"
@@ -46,7 +23,7 @@
               placeholder="Try “distributed systems”"
               maxlength="500"
               autocomplete="off"
-            /><button class="primary">Search ↗</button>
+            /><button class="primary">Search</button>
           </div>
           <div class="filters">
             <label
@@ -73,18 +50,32 @@
         </form>
         <p id="status" role="status">Loading library…</p>
         <div id="results">
-          <div class="empty">
-            <span class="ornament">¶</span>
-            <h1>A little order for your words.</h1>
-            <p>
-              Add your notes or try the sample collection.<br />Every match comes with a traceable
-              score.
-            </p>
-          </div>
+          <div class="empty"><p>Enter a query, or open Collection to add documents.</p></div>
         </div>
       </section>
     </main>
-    <footer>POSITIONAL INVERTED INDEX / BM25 RANKING / ATOMIC SQLITE WRITES</footer>
+    <dialog id="library-panel" aria-labelledby="library-title">
+      <div class="section-title">
+        <h2 id="library-title">Collection</h2>
+        <button id="library-close">Close</button>
+      </div>
+      <p id="library-stats" class="muted"></p>
+      <label class="archive-filter"
+        ><input id="show-archive" type="checkbox" /> Show archived</label
+      >
+      <nav id="library" aria-label="Document library"></nav>
+      <button id="seed">Add sample collection</button>
+      <div class="library-tools">
+        <button id="export">Export active library</button
+        ><label class="file"
+          >Import library JSON<input id="import" type="file" accept=".json,application/json"
+        /></label>
+      </div>
+      <p class="footnote">
+        Stored in a local SQLite database. No account, embeddings, or network service.
+      </p>
+      <p id="library-status" role="status"></p>
+    </dialog>
     <dialog id="editor">
       <form id="document-form">
         <div class="dialog-head">

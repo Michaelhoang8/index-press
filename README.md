@@ -4,6 +4,8 @@ A persistent local document library with a positional inverted index, BM25 ranki
 
 ![Index Press search](docs/search.png)
 
+The main page focuses on the query and ranked document results. Match mode and result limits sit below the search bar, with ranking controls expandable alongside them. **Collection** opens the document list, archive filter, and import/export tools in a side panel; selecting a document opens its editor. Each result retains its BM25 contribution explanation.
+
 ## Run
 
 Requires Python 3.10+ and a modern browser; there are no runtime package dependencies.

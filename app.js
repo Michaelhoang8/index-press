@@ -13,6 +13,15 @@ let listing = [],
   searchController = null,
   libraryRevision = 0,
   fileRevision = 0;
+function setStatus(text) {
+  $('status').textContent = text;
+  $('library-status').textContent = text;
+}
+$('library-open').onclick = () => {
+  $('library-status').textContent = '';
+  $('library-panel').showModal();
+};
+$('library-close').onclick = () => $('library-panel').close();
 async function api(path, data, signal) {
   const response = await fetch(path, {
     method: data ? 'POST' : 'GET',
@@ -29,7 +38,7 @@ function invalidateSearch(message = 'Search settings changed. Search again to up
   searchController?.abort();
   searchController = null;
   $('results').replaceChildren();
-  $('status').textContent = message;
+  setStatus(message);
 }
 function libraryView() {
   const archived = $('show-archive').checked;
@@ -82,9 +91,10 @@ async function openDocument(id) {
     const doc = await api(`/api/document?id=${id}`);
     if (ticket !== openRevision) return;
     setDocument(doc);
+    $('library-panel').close();
     $('editor').showModal();
   } catch (error) {
-    $('status').textContent = error.message;
+    setStatus(error.message);
   }
 }
 $('new').onclick = () => {
@@ -121,7 +131,7 @@ async function afterMutation() {
   invalidateSearch('Library updated.');
   await refresh();
   if ($('query').value.trim()) await search();
-  else $('status').textContent = 'Library updated. Enter a query to search.';
+  else setStatus('Library updated. Enter a query to search.');
 }
 $('document-form').onsubmit = async (event) => {
   event.preventDefault();
@@ -270,8 +280,7 @@ async function search() {
     );
     if (ticket === searchRevision) showResults(data);
   } catch (error) {
-    if (ticket === searchRevision && error.name !== 'AbortError')
-      $('status').textContent = error.message;
+    if (ticket === searchRevision && error.name !== 'AbortError') setStatus(error.message);
   } finally {
     if (ticket === searchRevision) searchController = null;
   }
@@ -290,7 +299,7 @@ $('seed').onclick = async () => {
     await api('/api/import', await api('/api/samples'));
     await afterMutation();
   } catch (error) {
-    $('status').textContent = error.message;
+    setStatus(error.message);
   } finally {
     $('seed').disabled = false;
   }
@@ -309,7 +318,7 @@ $('export').onclick = async () => {
   try {
     download(await api('/api/export'), 'index-press-library.json');
   } catch (error) {
-    $('status').textContent = error.message;
+    setStatus(error.message);
   }
 };
 $('import').onchange = async (event) => {
@@ -323,14 +332,14 @@ $('import').onchange = async (event) => {
     await api('/api/import', data);
     await afterMutation();
   } catch (error) {
-    $('status').textContent = `Import failed: ${error.message}`;
+    setStatus(`Import failed: ${error.message}`);
   } finally {
     $('import').disabled = false;
   }
 };
 try {
   await refresh();
-  $('status').textContent = 'Ready. Search your collection or add a document.';
+  setStatus('Ready. Search your collection or add a document.');
 } catch (error) {
-  $('status').textContent = `Library unavailable: ${error.message}`;
+  setStatus(`Library unavailable: ${error.message}`);
 }
